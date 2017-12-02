@@ -1,6 +1,7 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
+using UnityEngine;
 
 public class BoxSpawner : MonoBehaviour {
 	public float TimeToRespawn;
@@ -9,24 +10,26 @@ public class BoxSpawner : MonoBehaviour {
 	void Start() {
 		StartCoroutine(Respawn());
 	}
-	IEnumerator Respawn() {
-		var GoldCount = Random.Range(0, MaxGold);
-		var Box = Instantiate(BoxPref);
-		Box.GetComponent<MoneyBox>().Count = GoldCount;
-		yield return new WaitForSeconds(TimeToRespawn);
-		StartCoroutine(Respawn());
-	}
 
-	Vector2 RandomPosition() {
-		var MapBounds = MapController.Global.MapBounds;
+	bool CheckTaxes() {
+		var rand = Random.Range(0, 100);
+		if (rand > TaxesController.Global.Taxe) {
+			return true;
+		}
+		return false;
+	}
+	IEnumerator Respawn() {
+		yield return new WaitForSeconds(3);
 		while (true) {
-			var RandomPos = new Vector3(Random.Range(0, MapBounds.x), Random.Range(0, MapBounds.y), 10);
-			RaycastHit ray;
-			if (Physics.Raycast(RandomPos, Vector3.down, out ray, 100)) {
-				if (ray.collider.gameObject.tag == "ground") {
-					return new Vector2(RandomPos.x, RandomPos.y);
-				}
+			if (CheckTaxes()) {
+				var GoldCount = Random.Range(0, MaxGold);
+				var Box = Instantiate(BoxPref);
+				BoxPref.transform.position = MapController.Global.RandomPosition();
+				Box.GetComponent<MoneyBox>().Count = GoldCount;
+				Box.GetComponentInChildren<TextMesh>().text = GoldCount.ToString();
 			}
+
+			yield return new WaitForSeconds(TimeToRespawn);			
 		}
 	}
 }

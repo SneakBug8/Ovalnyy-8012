@@ -1,6 +1,7 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
+using UnityEngine;
 
 public class MapController : MonoBehaviour {
 	public static MapController Global;
@@ -11,13 +12,10 @@ public class MapController : MonoBehaviour {
 		Global = this;
 	}
 
-	public bool IsWall(Vector3 position) {
-		RaycastHit hit;
-		var Upper = new Vector3(position.x, position.y, Camera.main.transform.position.z);
-		if (Physics.Raycast(Upper, new Vector3(0,0,-1), out hit, 25)) {
-				if (hit.collider.gameObject.tag == "wall") {
-					return true;
-				}
+	public bool IsWall(Vector2 position) {
+		RaycastHit2D hit = Physics2D.Raycast(position, new Vector2(1, 0), 0.1f);
+		if (hit.collider != null && hit.collider.gameObject.tag == "wall") {
+			return true;
 		}
 
 		return false;

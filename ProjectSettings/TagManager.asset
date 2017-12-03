@@ -7,6 +7,7 @@ TagManager:
   - ground
   - mob
   - shkolnik
+  - wall
   layers:
   - Default
   - TransparentFX

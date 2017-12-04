@@ -5,12 +5,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using System;
 
-public class Player : MonoBehaviour {
+public class Player : Character {
 	public static Player Global;
 
 	[Serializable]
 	public class PlayerConfigurationData {
-		public float Speed;		
+		public float Speed;	
+		public Skill[] Skills;			
 	}
 	[Serializable]
 	public class PlayerStateData {
@@ -19,7 +20,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public PlayerConfigurationData Config;
-	private PlayerStateData State;
+	private PlayerStateData State = new PlayerStateData();
 
 	public int Subscribers {
 		get {
@@ -38,9 +39,6 @@ public class Player : MonoBehaviour {
 			State.Money = value;
 		}
 	}
-	
-	public Skill[] Skills;
-
 	Animator animator;
 	void Awake() {
 		Global = this;
@@ -50,16 +48,29 @@ public class Player : MonoBehaviour {
 		animator = GetComponent<Animator>();
 		StartCoroutine(Subscribe());
 		animator.SetBool("IsDead", false);
+
+		foreach (var skill in Config.Skills) {
+			skill.Owner = this;
+		}
 	}
 
 	void Update()
 	{
+		
 		if (State.Money < 0) {
 			SceneManager.LoadScene("lost");
 		}
 		if (State.Money > RecordController.Global.Record) {
 			RecordController.Global.Record = State.Money;
 		}
+
+		foreach (var skill in Config.Skills) {
+			if (Input.GetKeyDown(skill.KeyCode)) {
+				skill.Activate();
+			}
+		}
+		
+		Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
 	}
 
 	public void Move(Vector2 direction) {

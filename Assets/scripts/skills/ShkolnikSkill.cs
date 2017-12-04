@@ -3,21 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ShkolnikSkill : Skill {
+	public ShkolnikSkill() {
+		KeyCode = KeyCode.Alpha1;
+	}
 	public GameObject ShkolnikPref;
 	protected GameObject obj;
-	public void Update() {
-		if (Input.GetKeyDown(KeyCode.Alpha1)) {
-			Activate();
-		}
-	}
 	protected override void OnActivate() {
-		obj = Instantiate(ShkolnikPref);
+		obj = GameObject.Instantiate(ShkolnikPref);
 		obj.transform.position = Player.Global.transform.position;
-		StartCoroutine(AutoDestroy(obj));
+		Owner.MyStartCoroutine(AutoDestroy(obj));
 	}
 
 	IEnumerator AutoDestroy(GameObject obj) {
 		yield return new WaitForSeconds(5);
-		Destroy(obj);
+		GameObject.Destroy(obj);
 	}
 }

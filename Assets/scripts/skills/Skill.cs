@@ -9,9 +9,9 @@ public class Skill : MonoBehaviour {
 	public KeyCode KeyCode;
 	public int Cost;
 	public void Activate() {
-		if (Player.Global.Subscribers >= Cost) {
+		if (Player.Global.State.Subscribers >= Cost) {
 			OnActivate();
-			Player.Global.Subscribers -= Cost;
+			Player.Global.State.Subscribers -= Cost;
 		}
 	}
 

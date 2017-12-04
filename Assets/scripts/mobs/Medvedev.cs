@@ -36,7 +36,7 @@ public class Medvedev : Mob {
 
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.gameObject == Player.Global.gameObject) {
-			Player.Global.Money = -1;
+			Player.Global.State.Money = -1;
 		}
 	}
 }

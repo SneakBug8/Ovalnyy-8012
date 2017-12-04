@@ -9,6 +9,6 @@ public class SubscribersStat : MonoBehaviour {
 		Text = GetComponent<Text>();
 	}
 	public void Update() {
-		Text.text = "Подписчики: " + Player.Global.Subscribers;
+		Text.text = "Подписчики: " + Player.Global.State.Subscribers;
 	}
 }

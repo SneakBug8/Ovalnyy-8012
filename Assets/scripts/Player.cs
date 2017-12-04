@@ -1,50 +1,51 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 using UnityEngine;
-using System;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class Player : Character {
 	public static Player Global;
 
 	[Serializable]
 	public class PlayerConfigurationData {
-		public float Speed;	
-		public Skill[] Skills;			
+		public float Speed;
+		public Skill[] Skills;
 	}
 	[Serializable]
 	public class PlayerStateData {
-		public int Money = 0;
-		public int Subscribers = 0;		
+		public UnityEvent OnMoneyChange = new UnityEvent();
+		int _money = 0;
+		public int Money {
+			get {
+				return _money;
+			}
+			set {
+				_money = value;
+				OnMoneyChange.Invoke();
+			}
+		}
+		public UnityEvent OnSubscribersChange = new UnityEvent();
+		int _subscribers = 0;
+		public int Subscribers {
+			get {
+				return _subscribers;
+			}
+			set {
+				_subscribers = value;
+				OnSubscribersChange.Invoke();
+			}
+		}
 	}
-
 	public PlayerConfigurationData Config;
-	private PlayerStateData State = new PlayerStateData();
-
-	public int Subscribers {
-		get {
-			return State.Subscribers;
-		}
-		set {
-			State.Subscribers = value;
-		}
-	}
-
-	public int Money {
-		get {
-			return State.Money;
-		}
-		set {
-			State.Money = value;
-		}
-	}
+	public PlayerStateData State = new PlayerStateData();
 	Animator animator;
 	void Awake() {
 		Global = this;
 	}
-	void Start()
-	{
+	void Start() {
 		animator = GetComponent<Animator>();
 		StartCoroutine(Subscribe());
 		animator.SetBool("IsDead", false);
@@ -52,25 +53,27 @@ public class Player : Character {
 		foreach (var skill in Config.Skills) {
 			skill.Owner = this;
 		}
+
+		State.OnMoneyChange.AddListener(OnMoneyListener);
 	}
 
-	void Update()
-	{
-		
+	void Update() {
+		foreach (var skill in Config.Skills) {
+			if (Input.GetKeyDown(skill.KeyCode)) {
+				skill.Activate();
+			}
+		}
+
+		Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
+	}
+
+	void OnMoneyListener() {
 		if (State.Money < 0) {
 			SceneManager.LoadScene("lost");
 		}
 		if (State.Money > RecordController.Global.Record) {
 			RecordController.Global.Record = State.Money;
 		}
-
-		foreach (var skill in Config.Skills) {
-			if (Input.GetKeyDown(skill.KeyCode)) {
-				skill.Activate();
-			}
-		}
-		
-		Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
 	}
 
 	public void Move(Vector2 direction) {
@@ -79,7 +82,7 @@ public class Player : Character {
 		if (movement != Vector2.zero) {
 			animator.SetBool("IsMoving", true);
 		} else {
-			animator.SetBool("IsMoving", false);			
+			animator.SetBool("IsMoving", false);
 		}
 		transform.Translate(movement);
 	}
@@ -92,7 +95,7 @@ public class Player : Character {
 				State.Subscribers -= mob.Cost;
 				mob.Die();
 			} else {
-				Debug.Log("Collision for money");				
+				Debug.Log("Collision for money");
 				State.Money -= mob.Cost;
 				mob.Stop(5);
 			}
@@ -114,7 +117,7 @@ public class Player : Character {
 				diff = 0;
 			}
 			State.Subscribers += diff;
-			
+
 			yield return new WaitForSeconds(1f);
 		}
 	}

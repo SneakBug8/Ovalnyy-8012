@@ -9,6 +9,6 @@ public class MoneyStat : MonoBehaviour {
 		Text = GetComponent<Text>();
 	}
 	void Update() {
-		Text.text = "Деньги: " + Player.Global.Money;
+		Text.text = "Деньги: " + Player.Global.State.Money;
 	}
 }

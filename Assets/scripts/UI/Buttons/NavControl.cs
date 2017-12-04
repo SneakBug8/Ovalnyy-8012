@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class NavControl : Button {
+	[HideInInspector]
 	public bool IsPressed = false;
-	public void Update()
+	void Update()
   {
     if(IsPressed())
     {

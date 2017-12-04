@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class TaxesStat : MonoBehaviour {
-	public Text Text;
-	public void Start() {
+	Text Text;
+	void Start() {
 		Text = GetComponent<Text>();
 	}
-	public void Update() {
+	void Update() {
 		Text.text = "Налоги: " + TaxesController.Global.Taxe;
 	}
 }

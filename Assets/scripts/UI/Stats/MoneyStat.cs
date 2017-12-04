@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class MoneyStat : MonoBehaviour {
-	private Text Text;
-	public void Start() {
+	Text Text;
+	void Start() {
 		Text = GetComponent<Text>();
 	}
-	public void Update() {
+	void Update() {
 		Text.text = "Деньги: " + Player.Global.Money;
 	}
 }

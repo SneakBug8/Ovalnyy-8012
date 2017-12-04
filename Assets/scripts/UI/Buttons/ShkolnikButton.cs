@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ShkolnikButton : MonoBehaviour {
 	Button button;
 
-	private void Start() {
+	void Start() {
 		button = GetComponent<Button>();
 		button.onClick.AddListener(onClick);
 	}

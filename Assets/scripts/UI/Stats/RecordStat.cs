@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class RecordStat : MonoBehaviour {
 	private Text Text;
-	public void Start() {
+	void Start() {
 		Text = GetComponent<Text>();
 	}
-	public void Update() {
+	void Update() {
 		Text.text = "Ваш рекорд: " + RecordController.Global.Record;
 	}
 }

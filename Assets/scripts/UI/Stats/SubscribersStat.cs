@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class SubscribersStat : MonoBehaviour {
-	public Text Text;
+	Text Text;
 	public void Start() {
 		Text = GetComponent<Text>();
 	}

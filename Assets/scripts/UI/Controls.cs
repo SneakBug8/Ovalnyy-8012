@@ -9,7 +9,7 @@ public class Controls : MonoBehaviour {
 	public NavControl Down;
 	public NavControl Left;
 	public NavControl Right;
-	public void Update() {
+	void Update() {
 		var movement = new Vector2();
 		if (Up.IsPressed) {
 			movement.y = 1;

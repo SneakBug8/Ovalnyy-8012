@@ -3,16 +3,45 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 using UnityEngine;
+using System;
 
 public class Player : MonoBehaviour {
 	public static Player Global;
 
-	public int Money = 0;
-	public int Subscribers = 0;
-	public Skill[] Skills;
-	public float Speed;
+	[Serializable]
+	public class PlayerConfigurationData {
+		public float Speed;		
+	}
+	[Serializable]
+	public class PlayerStateData {
+		public int Money = 0;
+		public int Subscribers = 0;		
+	}
 
-	private Animator animator;
+	public PlayerConfigurationData Config;
+	private PlayerStateData State;
+
+	public int Subscribers {
+		get {
+			return State.Subscribers;
+		}
+		set {
+			State.Subscribers = value;
+		}
+	}
+
+	public int Money {
+		get {
+			return State.Money;
+		}
+		set {
+			State.Money = value;
+		}
+	}
+	
+	public Skill[] Skills;
+
+	Animator animator;
 	void Awake() {
 		Global = this;
 	}
@@ -25,16 +54,16 @@ public class Player : MonoBehaviour {
 
 	void Update()
 	{
-		if (Money < 0) {
+		if (State.Money < 0) {
 			SceneManager.LoadScene("lost");
 		}
-		if (Money > RecordController.Global.Record) {
-			RecordController.Global.Record = Money;
+		if (State.Money > RecordController.Global.Record) {
+			RecordController.Global.Record = State.Money;
 		}
 	}
 
 	public void Move(Vector2 direction) {
-		var movement = direction * Time.deltaTime * Speed;
+		var movement = direction * Time.deltaTime * Config.Speed;
 
 		if (movement != Vector2.zero) {
 			animator.SetBool("IsMoving", true);
@@ -47,13 +76,13 @@ public class Player : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.gameObject.tag == "mob") {
 			var mob = other.gameObject.GetComponent<Mob>();
-			if (Subscribers > mob.Cost) {
+			if (State.Subscribers > mob.Cost) {
 				Debug.Log("Collision for subscribers");
-				Subscribers -= mob.Cost;
+				State.Subscribers -= mob.Cost;
 				mob.Die();
 			} else {
 				Debug.Log("Collision for money");				
-				Money -= mob.Cost;
+				State.Money -= mob.Cost;
 				mob.Stop(5);
 			}
 		}
@@ -62,15 +91,18 @@ public class Player : MonoBehaviour {
 	IEnumerator Subscribe() {
 		while (true) {
 			float med = 0;
-			foreach (var mob in MobManager.Global.Mobs) {
-				med += Vector3.Distance(transform.position, mob.transform.position);
+			foreach (var spawner in MobManager.Global.Spawners) {
+				var mob = spawner.Mob;
+				if (mob.activeSelf) {
+					med += Vector3.Distance(transform.position, mob.transform.position);
+				}
 			}
-			med = med / MobManager.Global.Mobs.Count;
+			med = med / MobManager.Global.Spawners.Length;
 			var diff = 100 - (int) med;
 			if (diff < 0) {
 				diff = 0;
 			}
-			Subscribers += diff;
+			State.Subscribers += diff;
 			
 			yield return new WaitForSeconds(1f);
 		}

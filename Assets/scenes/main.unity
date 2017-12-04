@@ -662,10 +662,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 559e8150a3027d047acce66255cd3750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Money: 0
-  Subscribers: 0
+  Config:
+    Speed: 3
   Skills: []
-  Speed: 2
 --- !u!212 &308203520
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3035,7 +3034,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b0289d03f4c5684881037ddc2dbb169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: {fileID: 0}
 --- !u!114 &1431470222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3685,7 +3683,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f662ece67adef04e82acea39165d912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: {fileID: 0}
 --- !u!114 &1810025860
 MonoBehaviour:
   m_ObjectHideFlags: 0

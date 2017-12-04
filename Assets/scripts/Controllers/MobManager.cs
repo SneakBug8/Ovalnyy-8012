@@ -1,29 +1,49 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 public class MobManager : MonoBehaviour {
 	public static MobManager Global;
-	public float TimeToRespawn;
-	public List<GameObject> Mobs = new List<GameObject>();
+	public MobSpawner[] Spawners;
 
-	public Sprite[] Sprites;
-
+	[Serializable]
+	public class MobSpawner {
+		public GameObject Mob;
+		public float TimeToRespawn;
+		
+	}
 	private void Awake() {
 		Global = this;
 	}
 
 	void Start() {
-		foreach (var mob in Mobs) {
-			mob.SetActive(true);
+		foreach (var spawn in Spawners) {
+			spawn.Mob.SetActive(true);
 		}
 	}
 
-	public void Respawn(GameObject mob) {
-		StartCoroutine(RespawnCoroutine(mob));
+	public void Respawn(Mob mob) {
+		MobSpawner spawner = null;
+		foreach (var spawn in Spawners) {
+			if (spawn.Mob == mob) {
+				spawner = spawn;
+				break;
+			}
+		}
+
+		if (spawner != null) {
+			StartCoroutine(RespawnCoroutine(spawner));
+		}
+		else {
+			Debug.LogError("No such mob to respawn");
+		}
 	}
 
-	IEnumerator RespawnCoroutine(GameObject mob) {
+	IEnumerator RespawnCoroutine(MobSpawner spawner) {
+		var mob = spawner.Mob;
+		var TimeToRespawn = spawner.TimeToRespawn;
+		
 		//TODO: Check min distance to Player
 		var comp = mob.GetComponent<Mob>();
 		comp.Cost += comp.AdditionAfterDeath;

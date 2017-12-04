@@ -24,7 +24,7 @@ public class Mob : MonoBehaviour {
 		if (TaxesController.Global.Taxe < 0) {
 			TaxesController.Global.Taxe = 0;			
 		}
-		MobManager.Global.Respawn(gameObject);
+		MobManager.Global.Respawn(this);
 		gameObject.SetActive(false);
 	}
 }

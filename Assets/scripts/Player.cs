@@ -23,23 +23,25 @@ public class Player : MonoBehaviour {
 		animator.SetBool("IsDead", false);
 	}
 
-	// Update is called once per frame
-	void Update() {
-		var movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-		if (movement != Vector2.zero) {
-			animator.SetBool("IsMoving", true);
-		} else {
-			animator.SetBool("IsMoving", false);			
-		}
-		transform.Translate(movement * Time.deltaTime * Speed);
-		// rigidbody.velocity = 0;
-
+	void Update()
+	{
 		if (Money < 0) {
 			SceneManager.LoadScene("lost");
 		}
 		if (Money > RecordController.Global.Record) {
 			RecordController.Global.Record = Money;
 		}
+	}
+
+	public void Move(Vector2 direction) {
+		var movement = direction * Time.deltaTime * Speed;
+
+		if (movement != Vector2.zero) {
+			animator.SetBool("IsMoving", true);
+		} else {
+			animator.SetBool("IsMoving", false);			
+		}
+		transform.Translate(movement);
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {

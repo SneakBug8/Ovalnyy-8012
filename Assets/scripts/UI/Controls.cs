@@ -10,20 +10,20 @@ public class Controls : MonoBehaviour {
 	public NavControl Left;
 	public NavControl Right;
 	void Update() {
-		var movement = new Vector2();
+		var direction = new Vector2();
 		if (Up.IsPressed) {
-			movement.y = 1;
+			direction.y = 1;
 		}
 		if (Down.IsPressed) {
-			movement.y = -1;
+			direction.y = -1;
 		}
 		if (Left.IsPressed) {
-			movement.x = -1;
+			direction.x = -1;
 		}
 		if (Right.IsPressed) {
-			movement.x = 1;
+			direction.x = 1;
 		}
 
-		Player.Global.transform.Translate(movement * Time.deltaTime * Player.Global.Speed);
+		Player.Global.Move(direction);
 	}
 }

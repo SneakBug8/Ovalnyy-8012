@@ -26,7 +26,7 @@ public class MobManager : MonoBehaviour {
 	public void Respawn(Mob mob) {
 		MobSpawner spawner = null;
 		foreach (var spawn in Spawners) {
-			if (spawn.Mob == mob) {
+			if (spawn.Mob == mob.gameObject) {
 				spawner = spawn;
 				break;
 			}
@@ -36,7 +36,7 @@ public class MobManager : MonoBehaviour {
 			StartCoroutine(RespawnCoroutine(spawner));
 		}
 		else {
-			Debug.LogError("No such mob to respawn");
+			Debug.LogError("No such mob to respawn: " + mob.name);
 		}
 	}
 

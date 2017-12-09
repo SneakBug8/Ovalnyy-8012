@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using CnControls;
+
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -64,7 +66,11 @@ public class Player : Character {
 			}
 		}
 
+		#if UNITY_ANDROID
+		Move(new Vector2(CnInputManager.GetAxis("Horizontal"), CnInputManager.GetAxis ("Vertical")));		
+		#else
 		Move(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
+		#endif
 	}
 
 	void OnMoneyListener() {
